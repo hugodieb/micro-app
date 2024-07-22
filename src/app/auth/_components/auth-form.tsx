@@ -12,11 +12,12 @@ export function AuthForm() {
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      await signIn('email', { email: data.email })
+      await signIn('email', { email: data.email, redirect: false })
 
       toast({
         title: 'Magic Link Sent',
         description: 'Check your email for the magic link to login',
+        duration: 1000
       })
     } catch (error) {
       toast({
@@ -40,7 +41,7 @@ export function AuthForm() {
           <Input id="email" type="email" placeholder="m@example.com" required {...form.register('email')} />
         </div>
         <Button type="submit" className="w-full">
-          Send Magic Link
+        {form.formState.isSubmitting ? 'Sending...' : 'Send Magic Link'}
         </Button>
       </form>
     </div>
