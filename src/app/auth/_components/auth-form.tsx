@@ -40,8 +40,8 @@ export function AuthForm() {
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" required {...form.register('email')} />
         </div>
-        <Button type="submit" className="w-full">
-        {form.formState.isSubmitting ? 'Sending...' : 'Send Magic Link'}
+        <Button type="submit" className="w-full bg-black">
+          {form.formState.isSubmitting ? 'Sending...' : 'Send Magic Link'}
         </Button>
       </form>
     </div>

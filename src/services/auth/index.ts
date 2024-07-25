@@ -1,10 +1,13 @@
 import NextAuth from 'next-auth'
 import EmailProvider from 'next-auth/providers/email'
 
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '../database'
 
-export const { handlers: { GET, POST }, auth } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
   pages: {
     signIn: '/auth',
     signOut: '/auth',
