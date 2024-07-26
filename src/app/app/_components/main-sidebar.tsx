@@ -1,10 +1,11 @@
 'use client'
 
-import { Sidebar, SidebarHeader, SidebarMain, SidebarNav, SidebarNavMain, SidebarNavLink, SidebarNavHeader, SidebarNavHeaderTitle, SidebarFooter } from "@/components/ui/dashboard/sidebar";
+import { Sidebar, SidebarHeader, SidebarMain, SidebarNav, SidebarNavMain, SidebarNavLink, SidebarNavHeader, SidebarNavHeaderTitle, SidebarFooter, DashboardSidebar, DashboardSidebarFooter, DashboardSidebarHeader, DashboardSidebarMain, DashboardSidebarNav, DashboardSidebarNavHeader, DashboardSidebarNavHeaderTitle, DashboardSidebarNavLink, DashboardSidebarNavMain } from "@/components/dashboard/sidebar";
 import { usePathname } from "next/navigation";
 import { HomeIcon, MixerVerticalIcon } from "@radix-ui/react-icons";
 import { UserDropdown } from "./user-dropdown";
 import { Session } from "next-auth";
+import { Logo } from "@/components/logo";
 
 type MainSideProps = {
   user: Session['user']
@@ -18,43 +19,43 @@ export function MainSidebar({ user }: MainSideProps) {
   }
 
   return (
-    <Sidebar>
-        <SidebarHeader>
-          <h3></h3>
-        </SidebarHeader>
-        <SidebarMain className="flex flex-col flex-grow">
-          <SidebarNav>
-            <SidebarNavMain>
-              <SidebarNavLink href="/app" active={isActive('/app')}>
-                <HomeIcon className="w-3 h-3 mr-3" />
-                Tarefas
-              </SidebarNavLink>
-              <SidebarNavLink href="/app/settings" active={isActive('/app/settings')}>
-                <MixerVerticalIcon className="w-3 h-3 mr-3" />
-                Configurações
-              </SidebarNavLink>
-            </SidebarNavMain>
-          </SidebarNav>
+    <DashboardSidebar>
+      <DashboardSidebarHeader>
+        <Logo />
+      </DashboardSidebarHeader>
+      <DashboardSidebarMain className="flex flex-col flex-grow">
+        <DashboardSidebarNav>
+          <DashboardSidebarNavMain>
+            <DashboardSidebarNavLink href="/app" active={isActive('/app')}>
+              <HomeIcon className="w-3 h-3 mr-3" />
+              Tarefas
+            </DashboardSidebarNavLink>
+            <DashboardSidebarNavLink href="/app/settings" active={isActive('/app/settings')}>
+              <MixerVerticalIcon className="w-3 h-3 mr-3" />
+              Configurações
+            </DashboardSidebarNavLink>
+          </DashboardSidebarNavMain>
+        </DashboardSidebarNav>
 
-          <SidebarNav className="mt-auto ">
-            <SidebarNavHeader>
-              <SidebarNavHeaderTitle>
-                Links Extras
-              </SidebarNavHeaderTitle>
-            </SidebarNavHeader>
-            <SidebarNavMain>
-              <SidebarNavLink href="/">
-                Precisa de ajuda?
-              </SidebarNavLink>
-              <SidebarNavLink href="/">
-                Site
-              </SidebarNavLink>
-            </SidebarNavMain>
-          </SidebarNav>
-        </SidebarMain>
-        <SidebarFooter>
-          <UserDropdown user={user} />
-        </SidebarFooter>
-      </Sidebar>
+        <DashboardSidebarNav className="mt-auto ">
+          <DashboardSidebarNavHeader>
+            <DashboardSidebarNavHeaderTitle>
+              Links Extras
+            </DashboardSidebarNavHeaderTitle>
+          </DashboardSidebarNavHeader>
+          <DashboardSidebarNavMain>
+            <DashboardSidebarNavLink href="/">
+              Precisa de ajuda?
+            </DashboardSidebarNavLink>
+            <DashboardSidebarNavLink href="/">
+              Site
+            </DashboardSidebarNavLink>
+          </DashboardSidebarNavMain>
+        </DashboardSidebarNav>
+      </DashboardSidebarMain>
+      <DashboardSidebarFooter>
+        <UserDropdown user={user} />
+      </DashboardSidebarFooter>
+    </DashboardSidebar>
   )
 }

@@ -14,7 +14,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Share2Icon, UploadIcon } from "@radix-ui/react-icons"
+import { LockClosedIcon, Share2Icon, UploadIcon } from "@radix-ui/react-icons"
 import { Session } from "next-auth"
 
 type UserDropdownProps = {
@@ -44,20 +44,29 @@ export function UserDropdown({ user }: UserDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <div className="flex flex-col flex-1 space-y-1 text-left">
+            {user?.name && (
+              <p className="text-xs font-medium leading-none">{user.name}</p>
+            )}
+            <p className="text-xs leading-none text-muted-foreground">
+              {user?.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Configurações            
+            Configurações
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Upgrade            
-          </DropdownMenuItem>          
+            Upgrade
+          </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />       
+        <DropdownMenuSeparator />
         <DropdownMenuItem className="justify-between space-x-2">
           Log out
-          <UploadIcon className="rotate-90" />
+          <LockClosedIcon className="" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
