@@ -1,4 +1,4 @@
-
+import { cn } from "@/lib/utils"
 
 export type DashboardPageGenericProps<T = unknown> = {
   children: React.ReactNode
@@ -10,10 +10,10 @@ export function DashboardPage({
   children,
 }: DashboardPageGenericProps) {
   return (
-    <section className="{cn([
+    <section className={cn([
         'h-screen',
         className,
-      ])}">
+      ])}>
       {children}
     </section>
   )
@@ -24,26 +24,26 @@ export function DashboardPageHeader({
   children,
 }: DashboardPageGenericProps) {
   return (
-    <header className="{cn([
-        'px-6 h-12 border-b border-border flex items-center justify-between',
+    <header className={cn([
+        'px-6 py-3 border-b border-border h-12',
         className,
-      ])}">
+      ])}>
       {children}
     </header>
   )
 }
 
-export function DashboardPageHeaderTtile({
+export function DashboardPageHeaderTitle({
   className,
   children,
 }: DashboardPageGenericProps) {
   return (
-    <h1 className="{cn([
-        'text-xs text-muted-foreground uppercase',
+    <span className={cn([
+        'text-lg text-muted-foreground uppercase',
         className,
-      ])}">
+      ])}>
       {children}
-    </h1>
+    </span>
   )
 }
 
@@ -52,10 +52,10 @@ export function DashboardPageHeaderNav({
   children,
 }: DashboardPageGenericProps) {
   return (
-    <nav className="{cn([
+    <nav className={cn([
         '',
         className,
-      ])}">
+      ])}>
       {children}
     </nav>
   )
@@ -66,10 +66,10 @@ export function DashboardPageMain({
   children,
 }: DashboardPageGenericProps) {
   return (
-    <main className="{cn([
+    <main className={cn([
         'p-6',
         className,
-      ])}">
+      ])}>
       {children}
     </main>
   )

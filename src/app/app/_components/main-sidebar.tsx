@@ -1,6 +1,6 @@
 'use client'
 
-import { Sidebar, SidebarHeader, SidebarMain, SidebarNav, SidebarNavMain, SidebarNavLink, SidebarNavHeader, SidebarNavHeaderTitle, SidebarFooter, DashboardSidebar, DashboardSidebarFooter, DashboardSidebarHeader, DashboardSidebarMain, DashboardSidebarNav, DashboardSidebarNavHeader, DashboardSidebarNavHeaderTitle, DashboardSidebarNavLink, DashboardSidebarNavMain } from "@/components/dashboard/sidebar";
+import { DashboardSidebar, DashboardSidebarFooter, DashboardSidebarHeader, DashboardSidebarMain, DashboardSidebarNav, DashboardSidebarNavHeader, DashboardSidebarNavHeaderTitle, DashboardSidebarNavLink, DashboardSidebarNavMain } from "@/components/dashboard/sidebar";
 import { usePathname } from "next/navigation";
 import { HomeIcon, MixerVerticalIcon } from "@radix-ui/react-icons";
 import { UserDropdown } from "./user-dropdown";
@@ -17,6 +17,8 @@ export function MainSidebar({ user }: MainSideProps) {
   const isActive = (path: string) => {
     return pathname === path
   }
+
+  if (!user) return
 
   return (
     <DashboardSidebar>

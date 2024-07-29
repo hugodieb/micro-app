@@ -16,12 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LockClosedIcon, Share2Icon, UploadIcon } from "@radix-ui/react-icons"
 import { Session } from "next-auth"
+import { signOut } from "next-auth/react"
 
 type UserDropdownProps = {
   user: Session['user']
 }
 
 export function UserDropdown({ user }: UserDropdownProps) {
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -64,7 +66,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="justify-between space-x-2">
+        <DropdownMenuItem onClick={() => signOut()} className="justify-between space-x-2">
           Log out
           <LockClosedIcon className="" />
         </DropdownMenuItem>
