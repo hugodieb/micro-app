@@ -1,11 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons"
+import * as React from 'react'
+import { CaretSortIcon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,20 +13,17 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from '@tanstack/react-table'
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/dropdown-menu'
 import {
   Table,
   TableBody,
@@ -38,97 +31,122 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Todo } from "../types"
-
-export const columns: ColumnDef<Todo>[] = [
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const { doneAt } = row.original
-
-      const status: 'done' | 'waiting' = doneAt ? 'done' : 'waiting'
-      const variant: 'outline' | 'secondary' = doneAt
-        ? 'outline'
-        : 'secondary'
-      const cssVariant: 'bg-white' | 'bg-black text-white' = doneAt
-        ? 'bg-white'
-        : 'bg-black text-white'
-
-      return <Badge variant={variant} className={cssVariant}>{status}</Badge>
-    },
-  },
-  {
-    accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="link"
-          className="text-black"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue("title")}</div>,
-  },
-  {
-    accessorKey: "createdAt",
-    header: () => <div className="text-right">createdAt</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">
-          {row.original.createdAt.toLocaleDateString()}
-        </div>)
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const todo = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(todo.id)}
-            >
-              Copy Todo ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Mark is done</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Todo } from '../types'
+import { useRouter } from 'next/navigation'
+import { deleteTodo, upsertTodo } from '../actions'
+import { toast } from '@/components/ui/use-toast'
 
 type TodoDataTable = {
   data: Todo[]
 }
 
 export function TodoDataTable({ data }: TodoDataTable) {
+  const router = useRouter()
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   )
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const handleDeleteTodo = async (todo: Todo) => {
+    await deleteTodo({ id: todo.id })
+    router.refresh()
+
+    toast({
+      duration: 1000,
+      title: 'Deletion Successful',
+      description: 'The todo item has been successfully deleted.',
+    })
+  }
+
+  const handleToggleDoneTodo = async (todo: Todo) => {
+    const doneAt = todo.doneAt ? null : new Date().toISOString()
+
+    await upsertTodo({ id: todo.id, doneAt })
+    router.refresh()
+
+    toast({
+      duration: 1000,
+      title: 'Update Successful',
+      description: 'The todo item has been successfully updated.',
+    })
+  }
+
+  const columns: ColumnDef<Todo>[] = [
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const { doneAt } = row.original
+
+        const status: 'done' | 'waiting' = doneAt ? 'done' : 'waiting'
+        const variant: 'outline' | 'secondary' = doneAt
+          ? 'outline'
+          : 'secondary'
+
+        return <Badge variant={variant}>{status}</Badge>
+      },
+    },
+    {
+      accessorKey: 'title',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="link"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Title
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div>{row.getValue('title')}</div>,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: () => <div className="text-right">createdAt</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="text-right font-medium">
+            {row.original.createdAt.toLocaleDateString()}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const todo = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>              
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleToggleDoneTodo(todo)}>
+                Tarefa executada
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteTodo(todo)}>
+                Deleta tarefa
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
 
   const table = useReactTable({
     data,
@@ -150,7 +168,7 @@ export function TodoDataTable({ data }: TodoDataTable) {
   })
 
   return (
-    <div className="w-full">      
+    <div className="w-full">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -163,7 +181,7 @@ export function TodoDataTable({ data }: TodoDataTable) {
                         ? null
                         : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                     </TableHead>
                   )
@@ -176,13 +194,13 @@ export function TodoDataTable({ data }: TodoDataTable) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -203,7 +221,7 @@ export function TodoDataTable({ data }: TodoDataTable) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="space-x-2">

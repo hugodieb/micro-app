@@ -16,6 +16,13 @@ import { useRef } from "react"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { Todo } from "../types"
+import { upsertTodo } from "../actions"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { upsertTodoSchema } from "../schema"
+import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { z } from "zod"
+
 
 type TodoUpsertSheetProps = {
   children?: React.ReactNode
@@ -25,12 +32,28 @@ type TodoUpsertSheetProps = {
 export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
 
   const ref = useRef<HTMLDivElement>(null)
-  const form = useForm()
-
-  const onSubmit = form.handleSubmit((data) => {
-    console.log(data)
+  const router = useRouter()
+  const form = useForm<z.infer<typeof upsertTodoSchema>>({
+    resolver: zodResolver(upsertTodoSchema)
   })
 
+  const onSubmit = form.handleSubmit(async (data) => {
+    await upsertTodo(data)
+    router.refresh()
+
+    ref.current?.click()
+    if (form.formState.isSubmitSuccessful) {
+      form.reset({
+        title: ''
+      })
+      
+      toast({
+        duration: 1000,
+        title: 'Sucesso',
+        description: 'Seu Todo foi atualizado com sucesso'
+      })
+    }
+  })
 
   return (
     <Sheet>
@@ -43,9 +66,9 @@ export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-8 h-screen">
             <SheetHeader>
-              <SheetTitle>Create Todo</SheetTitle>
+              <SheetTitle>Criar Tarefa</SheetTitle>
               <SheetDescription>
-                Make changes to your profile here. Click save when you're done.
+                Crie sua tarefas aqui...
               </SheetDescription>
             </SheetHeader>
 
@@ -56,18 +79,15 @@ export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your todo title" {...field} />
+                    <Input placeholder="Título da tarefa" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Describer your task here.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <SheetFooter>
-              <Button type="submit">Save changes</Button>
+              <Button variant={"secondary"} type="submit">Salvar Tarefa</Button>
             </SheetFooter>
           </form>
         </Form>

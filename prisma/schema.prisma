@@ -66,5 +66,5 @@ model Todo {
   userId    String
   createdAt DateTime  @default(now())
   updateAt  DateTime  @updatedAt
-  doneAt    DateTime?
+  doneAt    DateTime? 
 }
