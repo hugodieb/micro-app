@@ -67,7 +67,7 @@ export function DashboardPageMain({
 }: DashboardPageGenericProps) {
   return (
     <main className={cn([
-        'p-6',
+        'py-6',
         className,
       ])}>
       {children}
