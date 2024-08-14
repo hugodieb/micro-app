@@ -10,6 +10,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 //import { createCheckoutSessionAction } from './actions'
 import { auth } from '@/services/auth'
+import { createCheckoutSessionAction } from './actions'
 //import { getUserCurrentPlan } from '@/services/stripe'
 
 export default async function Page() {
@@ -17,7 +18,7 @@ export default async function Page() {
   //const plan = await getUserCurrentPlan(session?.user.id as string)
 
   return (
-    <form action={''}>
+    <form action={createCheckoutSessionAction}>
       <Card>
         <CardHeader className="border-b border-border">
           <CardTitle>Uso do Plano</CardTitle>
