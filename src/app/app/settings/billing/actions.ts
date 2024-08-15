@@ -14,7 +14,11 @@ export async function createCheckoutSessionAction() {
     }
   }
 
-  const checkoutSession = await createCheckoutSession(session.user.id, session.user.email as string)
+  const checkoutSession = await createCheckoutSession(
+    session.user.id,
+    session.user.email as string,
+    session.user.stripeSubscriptionId as string
+  )
   if (!checkoutSession.url) return
 
   redirect(checkoutSession.url)
